@@ -1,4 +1,4 @@
-let TURNO_ACTUAL = null;
+let TURNO_ACTUAL = null; 
 
 document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('saludoBienvenida').textContent = saludoSegunHora();
