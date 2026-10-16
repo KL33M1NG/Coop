@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ingresos y Estadísticas - Cooperadora HSJB</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #005a8d; color: white; }
+    .filtros { display: flex; gap: 10px; flex-wrap: wrap; }
+    .filtros button { margin-top: 0; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media(max-width: 700px){ .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="encabezado">
+  <img src="https://i.ibb.co/q3ZH8jS5/Coop-Logo-II.png" alt="Logo" class="logo">
+  <h1>COOPERADORA HOSPITAL SAN JUAN BAUTISTA</h1>
+</header>
+
+<nav class="menu">
+  <a href="index.html">VENTA</a>
+  <a href="historial.html">HISTORIAL</a>
+  <a href="ingresos.html">INGRESOS Y ESTADÍSTICAS</a>
+  <a href="tutorial.html">TUTORIAL</a>
+</nav>
+
+<main>
+  <section class="tarjeta">
+    <h2>INGRESOS Y ESTADÍSTICAS</h2>
+    <div class="filtros">
+      <button onclick="cargar('dia')">DÍA</button>
+      <button onclick="cargar('semana')">SEMANA</button>
+      <button onclick="cargar('mes')">MES</button>
+      <button onclick="cargar('anio')">AÑO</button>
+      <button onclick="exportarPDF()" class="principal">EXPORTAR PDF</button>
+    </div>
+
+    <p id="totales"></p>
+
+    <div class="grid">
+      <div>
+        <h3>POR SERVICIO</h3>
+        <table id="tablaServicios">
+          <thead><tr><th>SERVICIO</th><th>BONOS</th><th>MONTO</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div>
+        <h3>POR VENDEDOR</h3>
+        <table id="tablaVendedores">
+          <thead><tr><th>VENDEDOR</th><th>BONOS</th><th>MONTO</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script>
+let DATA_ACTUAL = null;
+let FILTRO_ACTUAL = 'dia';
+
+async function cargar(filtro) {
+  FILTRO_ACTUAL = filtro;
+  const r = await API.obtenerEstadisticas(filtro);
+  DATA_ACTUAL = r;
+
+  document.getElementById('totales').textContent =
+    `TOTAL BONOS: ${r.cantidad} — RECAUDACIÓN: $${r.total}`;
+
+  const ts = document.querySelector('#tablaServicios tbody');
+  ts.innerHTML = '';
+  Object.keys(r.porServicio || {}).forEach(s => {
+    ts.innerHTML += `<tr><td>${s}</td><td>${r.porServicio[s].cantidad}</td><td>$${r.porServicio[s].monto}</td></tr>`;
+  });
+
+  const tv = document.querySelector('#tablaVendedores tbody');
+  tv.innerHTML = '';
+  Object.keys(r.porVendedor || {}).forEach(v => {
+    tv.innerHTML += `<tr><td>${v}</td><td>${r.porVendedor[v].cantidad}</td><td>$${r.porVendedor[v].monto}</td></tr>`;
+  });
+}
+
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text('COOPERADORA HOSPITAL SAN JUAN BAUTISTA', 105, 15, { align: 'center' });
+  doc.setFontSize(11);
+  doc.text(`INGRESOS Y ESTADÍSTICAS — FILTRO: ${FILTRO_ACTUAL.toUpperCase()}`, 105, 25, { align: 'center' });
+
+  let y = 40;
+  doc.text(`TOTAL BONOS: ${DATA_ACTUAL.cantidad}`, 20, y); y += 8;
+  doc.text(`RECAUDACIÓN TOTAL: $${DATA_ACTUAL.total}`, 20, y); y += 12;
+
+  doc.text('POR SERVICIO:', 20, y); y += 8;
+  Object.keys(DATA_ACTUAL.porServicio || {}).forEach(s => {
+    doc.text(`${s}: ${DATA_ACTUAL.porServicio[s].cantidad} bonos — $${DATA_ACTUAL.porServicio[s].monto}`, 25, y);
+    y += 7;
+  });
+
+  y += 5;
+  doc.text('POR VENDEDOR:', 20, y); y += 8;
+  Object.keys(DATA_ACTUAL.porVendedor || {}).forEach(v => {
+    doc.text(`${v}: ${DATA_ACTUAL.porVendedor[v].cantidad} bonos — $${DATA_ACTUAL.porVendedor[v].monto}`, 25, y);
+    y += 7;
+  });
+
+  doc.save(`Ingresos_${FILTRO_ACTUAL}.pdf`);
+}
+
+cargar('dia');
+</script>
+</body>
+</html>
