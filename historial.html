@@ -2,50 +2,56 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Historial de Ventas - Cooperadora HSJB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historial · Cooperadora HSJB</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
-  <style>
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #005a8d; color: white; }
-    .filtros { display: flex; gap: 10px; flex-wrap: wrap; }
-    .filtros button { margin-top: 0; }
-  </style>
 </head>
 <body>
 
 <header class="encabezado">
   <img src="https://i.ibb.co/q3ZH8jS5/Coop-Logo-II.png" alt="Logo" class="logo">
   <h1>COOPERADORA HOSPITAL SAN JUAN BAUTISTA</h1>
+  <div class="header-controls">
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i> <span id="themeLabel">OSCURO</span>
+    </button>
+  </div>
 </header>
 
 <nav class="menu">
-  <a href="index.html">VENTA</a>
-  <a href="historial.html">HISTORIAL</a>
-  <a href="ingresos.html">INGRESOS Y ESTADÍSTICAS</a>
-  <a href="tutorial.html">TUTORIAL</a>
+  <a href="index.html"><i class="fas fa-cash-register"></i> VENTA</a>
+  <a href="historial.html" class="activo"><i class="fas fa-list"></i> HISTORIAL</a>
+  <a href="ingresos.html"><i class="fas fa-chart-line"></i> INGRESOS</a>
+  <a href="tutorial.html"><i class="fas fa-book"></i> TUTORIAL</a>
 </nav>
 
 <main>
   <section class="tarjeta">
-    <h2>HISTORIAL DE VENTAS</h2>
+    <h2><i class="fas fa-list"></i> HISTORIAL DE VENTAS</h2>
+
     <div class="filtros">
-      <button onclick="cargar('dia')">DÍA</button>
-      <button onclick="cargar('semana')">SEMANA</button>
-      <button onclick="cargar('mes')">MES</button>
-      <button onclick="cargar('anio')">AÑO</button>
-      <button onclick="exportarPDF()" class="principal">EXPORTAR PDF</button>
+      <button onclick="cargar('dia', this)" class="btn-info"><i class="fas fa-calendar-day"></i> DÍA</button>
+      <button onclick="cargar('semana', this)" class="btn-info"><i class="fas fa-calendar-week"></i> SEMANA</button>
+      <button onclick="cargar('mes', this)" class="btn-info"><i class="fas fa-calendar-alt"></i> MES</button>
+      <button onclick="cargar('anio', this)" class="btn-info"><i class="fas fa-calendar"></i> AÑO</button>
+      <button onclick="cargar('todo', this)" class="btn-info"><i class="fas fa-infinity"></i> TODO</button>
+      <button onclick="exportarPDF()" class="principal" style="margin-left:auto;width:auto;padding:0.6rem 1.2rem;font-size:0.85rem;">
+        <i class="fas fa-file-pdf"></i> EXPORTAR PDF
+      </button>
     </div>
-    <p id="resumen"></p>
-    <table id="tabla">
-      <thead>
-        <tr>
-          <th>FECHA</th><th>HORA</th><th>VENDEDOR</th>
-          <th>MONTO</th><th>MEDIO</th><th>SERVICIO</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+
+    <p id="resumen" style="margin-top:1rem;font-weight:700;"></p>
+
+    <div id="contenedorTabla">
+      <div class="cargando">
+        <div class="spinner"></div>
+        <p>CARGANDO HISTORIAL...</p>
+      </div>
+    </div>
   </section>
 </main>
 
@@ -56,26 +62,62 @@
 let VENTAS_ACTUALES = [];
 let FILTRO_ACTUAL = 'dia';
 
-async function cargar(filtro) {
+async function cargar(filtro, boton) {
   FILTRO_ACTUAL = filtro;
-  const r = await API.obtenerHistorial(filtro);
-  VENTAS_ACTUALES = r.ventas || [];
 
-  document.getElementById('resumen').textContent =
-    `CANTIDAD DE BONOS: ${r.cantidad} — TOTAL: $${r.total}`;
+  // Resaltar botón activo
+  document.querySelectorAll('.filtros button').forEach(b => b.classList.remove('principal'));
+  if (boton) boton.classList.add('principal');
 
-  const tbody = document.querySelector('#tabla tbody');
-  tbody.innerHTML = '';
-  VENTAS_ACTUALES.forEach(v => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${v[1]}</td><td>${v[2]}</td><td>${v[4]}</td>
-      <td>$${v[5]}</td><td>${v[6]}</td><td>${v[8]}</td>`;
-    tbody.appendChild(tr);
-  });
+  // Mostrar spinner
+  document.getElementById('contenedorTabla').innerHTML =
+    '<div class="cargando"><div class="spinner"></div><p>CARGANDO HISTORIAL...</p></div>';
+  document.getElementById('resumen').textContent = '';
+
+  try {
+    const r = await API.obtenerHistorial(filtro);
+    if (!r.ok) throw new Error(r.error || 'ERROR DESCONOCIDO');
+
+    VENTAS_ACTUALES = r.ventas || [];
+    document.getElementById('resumen').innerHTML =
+      `<i class="fas fa-ticket-alt"></i> BONOS: <strong>${r.cantidad}</strong> &nbsp;|&nbsp; <i class="fas fa-dollar-sign"></i> TOTAL: <strong>$${r.total}</strong>`;
+
+    const cont = document.getElementById('contenedorTabla');
+    if (!VENTAS_ACTUALES.length) {
+      cont.innerHTML = '<div class="cargando"><i class="fas fa-search" style="font-size:2rem;opacity:0.4;"></i><p>NO HAY REGISTROS PARA ESTE PERÍODO.</p></div>';
+      return;
+    }
+
+    let html = `<table><thead><tr>
+      <th>FECHA</th><th>HORA</th><th>VENDEDOR</th>
+      <th>MONTO</th><th>MEDIO</th><th>SERVICIO</th>
+    </tr></thead><tbody>`;
+
+    VENTAS_ACTUALES.forEach(v => {
+      html += `<tr>
+        <td>${v[1]}</td>
+        <td>${String(v[2]).substring(0,5)}</td>
+        <td>${v[4]}</td>
+        <td><strong>$${v[5]}</strong></td>
+        <td>${v[6]}</td>
+        <td>${v[8]}</td>
+      </tr>`;
+    });
+    html += '</tbody></table>';
+    cont.innerHTML = html;
+
+  } catch (e) {
+    document.getElementById('contenedorTabla').innerHTML =
+      `<div class="cargando" style="color:#e53e3e;">
+        <i class="fas fa-exclamation-triangle" style="font-size:2rem;"></i>
+        <p>ERROR: ${e.message}</p>
+      </div>`;
+    mostrarToast('ERROR AL CARGAR HISTORIAL', 'error');
+  }
 }
 
 function exportarPDF() {
+  if (!VENTAS_ACTUALES.length) return mostrarToast('NO HAY DATOS PARA EXPORTAR', 'error');
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.setFontSize(14);
@@ -84,17 +126,24 @@ function exportarPDF() {
   doc.text(`HISTORIAL — FILTRO: ${FILTRO_ACTUAL.toUpperCase()}`, 105, 25, { align: 'center' });
 
   let y = 40;
-  doc.text('FECHA   HORA   VENDEDOR   MONTO   SERVICIO', 10, y);
+  doc.setFontSize(9);
+  doc.text('FECHA      HORA    VENDEDOR       MONTO     SERVICIO', 10, y);
   y += 8;
   VENTAS_ACTUALES.forEach(v => {
     if (y > 280) { doc.addPage(); y = 20; }
-    doc.text(`${v[1]}  ${v[2]}  ${v[4]}  $${v[5]}  ${v[8]}`, 10, y);
+    doc.text(
+      `${v[1]}   ${String(v[2]).substring(0,5)}   ${v[4]}   $${v[5]}   ${v[8]}`,
+      10, y
+    );
     y += 6;
   });
   doc.save(`Historial_${FILTRO_ACTUAL}.pdf`);
+  mostrarToast('PDF EXPORTADO', 'success');
 }
 
-cargar('dia');
+document.addEventListener('DOMContentLoaded', () => {
+  cargar('dia', document.querySelector('.filtros button'));
+});
 </script>
 </body>
 </html>
