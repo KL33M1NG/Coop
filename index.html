@@ -1,43 +1,97 @@
-<header>
-  <img src="img/logo-cooperadora.png" alt="Cooperadora">
-  <h1>COOPERADORA DEL HOSPITAL SAN JUAN BAUTISTA</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cooperadora HSJB - Venta de Bonos</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<header class="encabezado">
+  <img src="https://i.ibb.co/q3ZH8jS5/Coop-Logo-II.png" alt="Logo Cooperadora" class="logo">
+  <h1>COOPERADORA HOSPITAL SAN JUAN BAUTISTA</h1>
 </header>
 
-<section id="turno">
-  <button id="btnIniciarTurno">INICIAR TURNO</button>
-  <button id="btnFinalizarTurno" disabled>FINALIZAR TURNO</button>
-  <span id="estadoTurno">SIN TURNO ACTIVO</span>
-</section>
+<nav class="menu">
+  <a href="index.html">VENTA</a>
+  <a href="historial.html">HISTORIAL</a>
+  <a href="ingresos.html">INGRESOS Y ESTADÍSTICAS</a>
+  <a href="tutorial.html">TUTORIAL</a>
+</nav>
 
-<section id="venta">
-  <label>MONTO DEL BONO</label>
-  <input type="number" id="monto" min="0" step="100">
+<main>
 
-  <label>MEDIO DE PAGO</label>
-  <select id="medioPago">
-    <option value="EFECTIVO" selected>EFECTIVO</option>
-    <option value="TRANSFERENCIA">TRANSFERENCIA</option>
-  </select>
+  <!-- BIENVENIDA -->
+  <section class="tarjeta">
+    <h2 id="saludoBienvenida">¡BUENOS DÍAS!</h2>
+    <p id="estadoTurno">SIN TURNO ACTIVO</p>
+  </section>
 
-  <div id="bloqueTransferencia" style="display:none">
-    <label>A NOMBRE DE</label>
-    <input type="text" id="titularTransferencia">
-  </div>
+  <!-- INICIO DE TURNO -->
+  <section class="tarjeta" id="seccionIniciarTurno">
+    <h3>INICIAR TURNO</h3>
+    <label>VENDEDOR:</label>
+    <select id="selectVendedor">
+      <option value="">-- SELECCIONE --</option>
+      <option value="JEREMIAS">JEREMIAS</option>
+      <option value="LUIS">LUIS</option>
+      <option value="GABRIEL">GABRIEL</option>
+    </select>
+    <button id="btnIniciarTurno">INICIAR TURNO</button>
+  </section>
 
-  <label>SERVICIO DESTINO</label>
-  <select id="servicio"></select>
-  <button id="btnAgregarServicio">+ AGREGAR SERVICIO</button>
+  <!-- VENTA DE BONOS -->
+  <section class="tarjeta" id="seccionVenta" style="display:none">
+    <h3>REGISTRAR VENTA DE BONO</h3>
 
-  <button id="btnGenerarBono">GENERAR BONO</button>
-</section>
+    <label>MONTO DEL BONO ($):</label>
+    <input type="number" id="monto" min="0" step="100" placeholder="EJ: 500">
 
-<!-- Ticket oculto (solo visible al imprimir) -->
+    <label>MEDIO DE PAGO:</label>
+    <select id="medioPago">
+      <option value="EFECTIVO" selected>EFECTIVO</option>
+      <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+    </select>
+
+    <div id="bloqueTransferencia" style="display:none">
+      <label>A NOMBRE DE:</label>
+      <input type="text" id="titularTransferencia" placeholder="TITULAR DE LA TRANSFERENCIA">
+    </div>
+
+    <label>SERVICIO DESTINO:</label>
+    <select id="servicio"></select>
+
+    <div class="fila-botones">
+      <button id="btnAgregarServicio" class="secundario">+ AGREGAR SERVICIO</button>
+    </div>
+
+    <button id="btnGenerarBono" class="principal">GENERAR BONO</button>
+  </section>
+
+  <!-- FINALIZAR TURNO -->
+  <section class="tarjeta" id="seccionFinalizar" style="display:none">
+    <button id="btnFinalizarTurno" class="peligro">FINALIZAR TURNO Y EXPORTAR PDF</button>
+  </section>
+
+</main>
+
+<!-- TICKET (solo se imprime) -->
 <div id="ticket" class="ticket-print">
-  <div class="centro bold">COOPERADORA DEL HOSPITAL SAN JUAN BAUTISTA</div>
+  <div class="centro bold">COOPERADORA</div>
+  <div class="centro bold">HOSPITAL SAN JUAN BAUTISTA</div>
   <div class="centro">--------------------------------</div>
-  <div id="tkFecha"></div>
-  <div id="tkHora"></div>
-  <div id="tkMonto"></div>
+  <div id="tkFecha" class="centro"></div>
+  <div id="tkHora" class="centro"></div>
+  <div class="centro">--------------------------------</div>
+  <div id="tkMonto" class="centro bold"></div>
+  <div id="tkServicio" class="centro"></div>
   <div class="centro">--------------------------------</div>
   <div class="centro bold">¡GRACIAS POR SU COLABORACIÓN!</div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/venta.js"></script>
+</body>
+</html>
