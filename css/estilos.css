@@ -1,50 +1,351 @@
-* { box-sizing: border-box; font-family: Arial, sans-serif; }
-body { margin: 0; background: #f4f6f9; color: #222; }
+/* ============================================================
+   COOPERADORA HOSPITAL SAN JUAN BAUTISTA - ESTILOS
+   ============================================================ */
 
-.encabezado {
-  display: flex; align-items: center; gap: 15px;
-  background: #005a8d; color: white; padding: 15px 25px;
+:root {
+  --bg: #eef4fb;
+  --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 50%, #fce7f3 100%);
+  --card-bg: #ffffff;
+  --text: #1a202c;
+  --text-secondary: #4a5568;
+  --border: #e2e8f0;
+  --input-bg: #f7fafc;
+  --input-focus: #ffffff;
+  --primary: #38bdf8;
+  --primary-light: #3b82f6;
+  --accent: #3182ce;
+  --success: #38a169;
+  --warning: #d69e2e;
+  --danger: #e53e3e;
+  --info: #6b46c1;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow: 0 4px 6px rgba(0,0,0,0.07);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --header-gradient: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
 }
-.logo { height: 70px; }
-.encabezado h1 { font-size: 1.4rem; margin: 0; }
 
+body.dark-mode {
+  --bg: #0f172a;
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
+  --card-bg: #1e293b;
+  --text: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --input-bg: #1e293b;
+  --input-focus: #1e293b;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow: 0 4px 6px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+  --header-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: var(--text);
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ============ HEADER ============ */
+.encabezado {
+  background: var(--header-gradient);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 3px solid rgba(255,255,255,0.1);
+}
+.encabezado .logo {
+  height: 60px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  transition: transform var(--transition);
+}
+.encabezado .logo:hover { transform: scale(1.08); }
+.encabezado h1 {
+  font-size: 1.25rem;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+.encabezado .header-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.theme-toggle {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  backdrop-filter: blur(10px);
+  transition: all var(--transition);
+}
+.theme-toggle:hover { background: rgba(255,255,255,0.25); }
+
+/* ============ NAV ============ */
 .menu {
-  display: flex; gap: 10px; padding: 10px 25px;
-  background: #003f63;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: rgba(0,0,0,0.15);
+  backdrop-filter: blur(6px);
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .menu a {
-  color: white; text-decoration: none; padding: 8px 14px;
-  background: #005a8d; border-radius: 6px; font-weight: bold; font-size: 0.9rem;
+  color: white;
+  text-decoration: none;
+  padding: 0.55rem 1.1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all var(--transition);
 }
-.menu a:hover { background: #0077b6; }
+.menu a:hover { background: rgba(255,255,255,0.25); }
+.menu a.activo { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.5); }
 
-main { max-width: 900px; margin: 25px auto; padding: 0 20px; }
+/* ============ CONTENEDOR ============ */
+main {
+  max-width: 1000px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
 
+/* ============ TARJETAS ============ */
 .tarjeta {
-  background: white; padding: 20px 25px; border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 20px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  animation: aparecer 0.35s ease;
 }
-.tarjeta h2, .tarjeta h3 { margin-top: 0; color: #005a8d; }
+.tarjeta::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-light), var(--info), var(--success));
+  opacity: 0.8;
+}
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tarjeta h2 {
+  font-size: 1.4rem;
+  color: var(--primary-light);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.tarjeta h3 {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+}
 
-label { display: block; margin: 12px 0 5px; font-weight: bold; font-size: 0.95rem; }
-input, select {
-  width: 100%; padding: 10px; border: 1px solid #ccc;
-  border-radius: 6px; font-size: 1rem; text-transform: uppercase;
+/* ============ FORMULARIOS ============ */
+label {
+  display: block;
+  margin: 0.9rem 0 0.35rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+input, select, textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  background: var(--input-bg);
+  color: var(--text);
+  font-family: inherit;
+  transition: all var(--transition);
+  text-transform: uppercase;
 }
 input[type="number"] { text-transform: none; }
-
-button {
-  margin-top: 15px; padding: 12px 20px; border: none;
-  border-radius: 6px; font-size: 1rem; font-weight: bold;
-  cursor: pointer; background: #005a8d; color: white;
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  background: var(--input-focus);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(49,130,206,0.12);
 }
-button:hover { opacity: 0.9; }
-button.principal { background: #198754; width: 100%; padding: 15px; font-size: 1.1rem; }
-button.secundario { background: #6c757d; }
-button.peligro { background: #b02a37; width: 100%; padding: 15px; font-size: 1.1rem; }
-.fila-botones { display: flex; gap: 10px; }
 
-/* ====================== IMPRESIÓN TICKET ====================== */
+/* ============ BOTONES ============ */
+button {
+  margin-top: 0.9rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: white;
+  letter-spacing: 0.3px;
+  box-shadow: var(--shadow-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition);
+}
+button:active { transform: scale(0.97); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+button.principal { background: linear-gradient(135deg, #38a169, #48bb78); width: 100%; padding: 1rem; font-size: 1.05rem; }
+button.secundario { background: linear-gradient(135deg, #a0aec0, #cbd5e0); color: #1a202c; }
+button.peligro { background: linear-gradient(135deg, #e53e3e, #fc8181); width: 100%; padding: 1rem; font-size: 1.05rem; }
+button.btn-info { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
+button.btn-warning { background: linear-gradient(135deg, #d69e2e, #ecc94b); color: #1a202c; }
+
+/* ============ ESTADO ============ */
+#estadoTurno {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: 0.5rem;
+  padding: 0.8rem 1rem;
+  background: var(--input-bg);
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+#saludoBienvenida {
+  font-size: 1.6rem;
+  color: var(--primary-light);
+  text-align: center;
+  background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(107,70,193,0.08));
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--accent);
+}
+
+/* ============ FILA BOTONES ============ */
+.fila-botones { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+/* ============ TABLAS ============ */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+}
+th {
+  background: var(--header-gradient);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.4px;
+}
+tr:hover td { background: var(--input-bg); }
+
+/* ============ FILTROS ============ */
+.filtros {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  background: var(--input-bg);
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-top: 0.5rem;
+}
+.filtros button { margin-top: 0; padding: 0.6rem 1.1rem; font-size: 0.85rem; }
+
+/* ============ GRID ESTADÍSTICAS ============ */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+@media(max-width: 700px){ .grid { grid-template-columns: 1fr; } }
+
+/* ============ LOADING / SPINNER ============ */
+.cargando {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+.cargando .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  margin: 0 auto 0.8rem;
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* ============ TOAST ============ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--primary-light);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  font-weight: 600;
+  max-width: 90vw;
+  animation: slideInRight 0.35s ease;
+}
+.toast.success { background: linear-gradient(135deg, #38a169, #48bb78); }
+.toast.error   { background: linear-gradient(135deg, #e53e3e, #fc8181); }
+.toast.info    { background: linear-gradient(135deg, #2b6cb0, #3182ce); }
+@keyframes slideInRight {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* ============ TICKET (IMPRESIÓN) ============ */
 .ticket-print { display: none; }
 
 @media print {
@@ -52,14 +353,26 @@ button.peligro { background: #b02a37; width: 100%; padding: 15px; font-size: 1.1
   .ticket-print, .ticket-print * { visibility: visible; }
   .ticket-print {
     display: block;
-    position: absolute; left: 0; top: 0;
+    position: absolute;
+    left: 0; top: 0;
     width: 60mm;
-    font-family: 'Arial', monospace;
-    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
     line-height: 1.3;
     padding: 2mm 1mm;
+    color: #000;
   }
-  .centro { text-align: center; }
-  .bold { font-weight: bold; }
+  .ticket-print .centro { text-align: center; }
+  .ticket-print .bold { font-weight: bold; }
   @page { size: 60mm auto; margin: 0; }
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 700px) {
+  .encabezado { gap: 0.8rem; padding: 0.8rem 1rem; }
+  .encabezado .logo { height: 40px; }
+  .encabezado h1 { font-size: 1rem; }
+  .encabezado .header-controls { margin-left: 0; justify-content: center; width: 100%; }
+  main { padding: 0 0.6rem; }
+  .tarjeta { padding: 1.2rem; }
 }
