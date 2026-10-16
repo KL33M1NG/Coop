@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Ventas - Cooperadora HSJB</title>
+  <link rel="stylesheet" href="css/estilos.css">
+  <style>
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background: #005a8d; color: white; }
+    .filtros { display: flex; gap: 10px; flex-wrap: wrap; }
+    .filtros button { margin-top: 0; }
+  </style>
+</head>
+<body>
+
+<header class="encabezado">
+  <img src="https://i.ibb.co/q3ZH8jS5/Coop-Logo-II.png" alt="Logo" class="logo">
+  <h1>COOPERADORA HOSPITAL SAN JUAN BAUTISTA</h1>
+</header>
+
+<nav class="menu">
+  <a href="index.html">VENTA</a>
+  <a href="historial.html">HISTORIAL</a>
+  <a href="ingresos.html">INGRESOS Y ESTADÍSTICAS</a>
+  <a href="tutorial.html">TUTORIAL</a>
+</nav>
+
+<main>
+  <section class="tarjeta">
+    <h2>HISTORIAL DE VENTAS</h2>
+    <div class="filtros">
+      <button onclick="cargar('dia')">DÍA</button>
+      <button onclick="cargar('semana')">SEMANA</button>
+      <button onclick="cargar('mes')">MES</button>
+      <button onclick="cargar('anio')">AÑO</button>
+      <button onclick="exportarPDF()" class="principal">EXPORTAR PDF</button>
+    </div>
+    <p id="resumen"></p>
+    <table id="tabla">
+      <thead>
+        <tr>
+          <th>FECHA</th><th>HORA</th><th>VENDEDOR</th>
+          <th>MONTO</th><th>MEDIO</th><th>SERVICIO</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/utils.js"></script>
+<script>
+let VENTAS_ACTUALES = [];
+let FILTRO_ACTUAL = 'dia';
+
+async function cargar(filtro) {
+  FILTRO_ACTUAL = filtro;
+  const r = await API.obtenerHistorial(filtro);
+  VENTAS_ACTUALES = r.ventas || [];
+
+  document.getElementById('resumen').textContent =
+    `CANTIDAD DE BONOS: ${r.cantidad} — TOTAL: $${r.total}`;
+
+  const tbody = document.querySelector('#tabla tbody');
+  tbody.innerHTML = '';
+  VENTAS_ACTUALES.forEach(v => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${v[1]}</td><td>${v[2]}</td><td>${v[4]}</td>
+      <td>$${v[5]}</td><td>${v[6]}</td><td>${v[8]}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function exportarPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(14);
+  doc.text('COOPERADORA HOSPITAL SAN JUAN BAUTISTA', 105, 15, { align: 'center' });
+  doc.setFontSize(11);
+  doc.text(`HISTORIAL — FILTRO: ${FILTRO_ACTUAL.toUpperCase()}`, 105, 25, { align: 'center' });
+
+  let y = 40;
+  doc.text('FECHA   HORA   VENDEDOR   MONTO   SERVICIO', 10, y);
+  y += 8;
+  VENTAS_ACTUALES.forEach(v => {
+    if (y > 280) { doc.addPage(); y = 20; }
+    doc.text(`${v[1]}  ${v[2]}  ${v[4]}  $${v[5]}  ${v[8]}`, 10, y);
+    y += 6;
+  });
+  doc.save(`Historial_${FILTRO_ACTUAL}.pdf`);
+}
+
+cargar('dia');
+</script>
+</body>
+</html>
