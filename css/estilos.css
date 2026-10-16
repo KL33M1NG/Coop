@@ -1,0 +1,10 @@
+@media print {
+  body * { visibility: hidden; }
+  #ticket, #ticket * { visibility: visible; }
+  #ticket {
+    position: absolute; left: 0; top: 0;
+    width: 58mm; font-family: 'Courier New', monospace;
+    font-size: 12px; line-height: 1.3;
+  }
+  @page { margin: 0; size: 58mm auto; }
+}
