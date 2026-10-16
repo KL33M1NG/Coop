@@ -54,8 +54,8 @@ button.peligro { background: #b02a37; width: 100%; padding: 15px; font-size: 1.1
     display: block;
     position: absolute; left: 0; top: 0;
     width: 60mm;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
+    font-family: 'Arial', monospace;
+    font-size: 12px;
     line-height: 1.3;
     padding: 2mm 1mm;
   }
