@@ -2,7 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Cooperadora HSJB - Venta de Bonos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cooperadora HSJB · Venta de Bonos</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
@@ -10,26 +16,29 @@
 <header class="encabezado">
   <img src="https://i.ibb.co/q3ZH8jS5/Coop-Logo-II.png" alt="Logo Cooperadora" class="logo">
   <h1>COOPERADORA HOSPITAL SAN JUAN BAUTISTA</h1>
+  <div class="header-controls">
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i> <span id="themeLabel">OSCURO</span>
+    </button>
+  </div>
 </header>
 
 <nav class="menu">
-  <a href="index.html">VENTA</a>
-  <a href="historial.html">HISTORIAL</a>
-  <a href="ingresos.html">INGRESOS Y ESTADÍSTICAS</a>
-  <a href="tutorial.html">TUTORIAL</a>
+  <a href="index.html" class="activo"><i class="fas fa-cash-register"></i> VENTA</a>
+  <a href="historial.html"><i class="fas fa-list"></i> HISTORIAL</a>
+  <a href="ingresos.html"><i class="fas fa-chart-line"></i> INGRESOS</a>
+  <a href="tutorial.html"><i class="fas fa-book"></i> TUTORIAL</a>
 </nav>
 
 <main>
 
-  <!-- BIENVENIDA -->
   <section class="tarjeta">
     <h2 id="saludoBienvenida">¡BUENOS DÍAS!</h2>
-    <p id="estadoTurno">SIN TURNO ACTIVO</p>
+    <p id="estadoTurno">VERIFICANDO TURNO...</p>
   </section>
 
-  <!-- INICIO DE TURNO -->
-  <section class="tarjeta" id="seccionIniciarTurno">
-    <h3>INICIAR TURNO</h3>
+  <section class="tarjeta" id="seccionIniciarTurno" style="display:none">
+    <h3><i class="fas fa-play-circle"></i> INICIAR TURNO</h3>
     <label>VENDEDOR:</label>
     <select id="selectVendedor">
       <option value="">-- SELECCIONE --</option>
@@ -37,15 +46,16 @@
       <option value="LUIS">LUIS</option>
       <option value="GABRIEL">GABRIEL</option>
     </select>
-    <button id="btnIniciarTurno">INICIAR TURNO</button>
+    <button id="btnIniciarTurno" class="principal">
+      <i class="fas fa-play"></i> INICIAR TURNO
+    </button>
   </section>
 
-  <!-- VENTA DE BONOS -->
   <section class="tarjeta" id="seccionVenta" style="display:none">
-    <h3>REGISTRAR VENTA DE BONO</h3>
+    <h3><i class="fas fa-ticket-alt"></i> REGISTRAR VENTA DE BONO</h3>
 
     <label>MONTO DEL BONO ($):</label>
-    <input type="number" id="monto" min="0" step="100" placeholder="EJ: 500">
+    <input type="number" id="monto" min="0" step="50" placeholder="EJ: 500">
 
     <label>MEDIO DE PAGO:</label>
     <select id="medioPago">
@@ -62,20 +72,25 @@
     <select id="servicio"></select>
 
     <div class="fila-botones">
-      <button id="btnAgregarServicio" class="secundario">+ AGREGAR SERVICIO</button>
+      <button id="btnAgregarServicio" class="secundario">
+        <i class="fas fa-plus"></i> AGREGAR SERVICIO
+      </button>
     </div>
 
-    <button id="btnGenerarBono" class="principal">GENERAR BONO</button>
+    <button id="btnGenerarBono" class="principal" style="margin-top:1.2rem">
+      <i class="fas fa-print"></i> GENERAR BONO E IMPRIMIR
+    </button>
   </section>
 
-  <!-- FINALIZAR TURNO -->
   <section class="tarjeta" id="seccionFinalizar" style="display:none">
-    <button id="btnFinalizarTurno" class="peligro">FINALIZAR TURNO Y EXPORTAR PDF</button>
+    <button id="btnFinalizarTurno" class="peligro">
+      <i class="fas fa-stop-circle"></i> FINALIZAR TURNO Y EXPORTAR PDF
+    </button>
   </section>
 
 </main>
 
-<!-- TICKET (solo se imprime) -->
+<!-- TICKET (solo visible al imprimir) -->
 <div id="ticket" class="ticket-print">
   <div class="centro bold">COOPERADORA</div>
   <div class="centro bold">HOSPITAL SAN JUAN BAUTISTA</div>
