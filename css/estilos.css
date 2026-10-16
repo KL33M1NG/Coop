@@ -1,10 +1,65 @@
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
+body { margin: 0; background: #f4f6f9; color: #222; }
+
+.encabezado {
+  display: flex; align-items: center; gap: 15px;
+  background: #005a8d; color: white; padding: 15px 25px;
+}
+.logo { height: 70px; }
+.encabezado h1 { font-size: 1.4rem; margin: 0; }
+
+.menu {
+  display: flex; gap: 10px; padding: 10px 25px;
+  background: #003f63;
+}
+.menu a {
+  color: white; text-decoration: none; padding: 8px 14px;
+  background: #005a8d; border-radius: 6px; font-weight: bold; font-size: 0.9rem;
+}
+.menu a:hover { background: #0077b6; }
+
+main { max-width: 900px; margin: 25px auto; padding: 0 20px; }
+
+.tarjeta {
+  background: white; padding: 20px 25px; border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 20px;
+}
+.tarjeta h2, .tarjeta h3 { margin-top: 0; color: #005a8d; }
+
+label { display: block; margin: 12px 0 5px; font-weight: bold; font-size: 0.95rem; }
+input, select {
+  width: 100%; padding: 10px; border: 1px solid #ccc;
+  border-radius: 6px; font-size: 1rem; text-transform: uppercase;
+}
+input[type="number"] { text-transform: none; }
+
+button {
+  margin-top: 15px; padding: 12px 20px; border: none;
+  border-radius: 6px; font-size: 1rem; font-weight: bold;
+  cursor: pointer; background: #005a8d; color: white;
+}
+button:hover { opacity: 0.9; }
+button.principal { background: #198754; width: 100%; padding: 15px; font-size: 1.1rem; }
+button.secundario { background: #6c757d; }
+button.peligro { background: #b02a37; width: 100%; padding: 15px; font-size: 1.1rem; }
+.fila-botones { display: flex; gap: 10px; }
+
+/* ====================== IMPRESIÓN TICKET ====================== */
+.ticket-print { display: none; }
+
 @media print {
   body * { visibility: hidden; }
-  #ticket, #ticket * { visibility: visible; }
-  #ticket {
+  .ticket-print, .ticket-print * { visibility: visible; }
+  .ticket-print {
+    display: block;
     position: absolute; left: 0; top: 0;
-    width: 58mm; font-family: 'Courier New', monospace;
-    font-size: 12px; line-height: 1.3;
+    width: 60mm;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    line-height: 1.3;
+    padding: 2mm 1mm;
   }
-  @page { margin: 0; size: 58mm auto; }
+  .centro { text-align: center; }
+  .bold { font-weight: bold; }
+  @page { size: 60mm auto; margin: 0; }
 }
