@@ -1,5 +1,5 @@
 // ============================================================
-// UTILIDADES GENERALES
+// UTILIDADES GENERALES 
 // ============================================================
 
 // MAYÚSCULAS automáticas + solo números
