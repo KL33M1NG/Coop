@@ -3,18 +3,20 @@ const URL_API = 'https://script.google.com/macros/s/AKfycbwGRLT16ItZ83KJ0qJWPFMw
 async function llamarAPI(accion, datos = {}) {
   const respuesta = await fetch(URL_API, {
     method: 'POST',
-    body: JSON.stringify({ accion, ...datos })
+    body: JSON.stringify({ accion, ...datos }),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' }
   });
+  if (!respuesta.ok) throw new Error('HTTP ' + respuesta.status);
   return respuesta.json();
 }
 
 const API = {
-  iniciarTurno:      (vendedor) => llamarAPI('iniciarTurno', { vendedor }),
-  finalizarTurno:    (turno_id) => llamarAPI('finalizarTurno', { turno_id }),
-  registrarVenta:    (datos)    => llamarAPI('registrarVenta', datos),
-  listarServicios:   ()         => llamarAPI('listarServicios'),
-  agregarServicio:   (s)        => llamarAPI('agregarServicio', { servicio: s }),
-  obtenerHistorial:  (filtro)   => llamarAPI('obtenerHistorial', { filtro }),
-  obtenerEstadisticas: (filtro) => llamarAPI('obtenerEstadisticas', { filtro }),
-  turnoActivo:       ()         => llamarAPI('turnoActivo')
+  iniciarTurno:        (vendedor) => llamarAPI('iniciarTurno', { vendedor }),
+  finalizarTurno:      (turno_id) => llamarAPI('finalizarTurno', { turno_id }),
+  registrarVenta:      (datos)    => llamarAPI('registrarVenta', datos),
+  listarServicios:     ()         => llamarAPI('listarServicios'),
+  agregarServicio:     (s)        => llamarAPI('agregarServicio', { servicio: s }),
+  obtenerHistorial:    (filtro)   => llamarAPI('obtenerHistorial', { filtro }),
+  obtenerEstadisticas: (filtro)   => llamarAPI('obtenerEstadisticas', { filtro }),
+  turnoActivo:         ()         => llamarAPI('turnoActivo')
 };
